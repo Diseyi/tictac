@@ -37,7 +37,6 @@ export default defineComponent({
   },
   methods: {
     makeMove(row: number, col: number) {
-      console.log(!this.board[row][col] && !this.winner)
       if (!this.board[row][col] && !this.winner) {
         this.board[row][col] = this.currentPlayer;
         if (this.checkWin()) {

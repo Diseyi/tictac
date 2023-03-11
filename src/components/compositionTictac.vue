@@ -47,7 +47,6 @@ const checkWin = () => {
 // checks whether a cell is empty and there is no winner before allowing the current player to make a move. 
 // If the move results in a win or a tie, the state is updated accordingly
 const play = (row: number, col: number) => {
-  console.log(!board[row][col] && !winner)
   if (!board[row][col] && !winner.value) {
     board[row][col] = currentPlayer.value;
     if (checkWin()) {
