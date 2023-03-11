@@ -1,0 +1,63 @@
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.tic-tac-toe {
+  text-align: center;
+}
+
+.board {
+  width: 309px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  margin: 3px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 40px;
+  background-color: #48cae4;
+}
+
+.cell-x {
+  color: #03045e;
+}
+
+.cell-o {
+  color: #fca311;
+}
+
+.label {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+button {
+  margin-top: 20px;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #0096c7;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
