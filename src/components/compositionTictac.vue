@@ -7,6 +7,8 @@ const winner = ref<string | null>(null);
 const isTie = ref(false);
 const gameover = ref(false);
 const currentPlayer = ref('X');
+const undoStack = reactive<number[][]>([])
+const arr: number[][] = []
 
 let board = reactive([
   ['', '', ''],
@@ -14,7 +16,6 @@ let board = reactive([
   ['', '', '']
 ]);
 
-// checks whether the board is completely filled with non-empty values, indicating a tie game.
 const checkTie = () => {
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
@@ -26,28 +27,33 @@ const checkTie = () => {
   return true;
 }
 
-// checks whether the current player has won the game, either by having three in a row, column, or diagonal.
 const checkWin = () => {
   const a = currentPlayer.value;
 
-  // Check rows and columns
   for (let i = 0; i < 3; i++) {
-    // check if all the elements in a row or column match the current player's value
     if (board[i].every(cell => cell === a)) return true;
     if (board.every(row => row[i] === a)) return true;
   }
 
-  // Check diagonals
   if (board[0][0] === a && board[1][1] === a && board[2][2] === a) return true;
   if (board[0][2] === a && board[1][1] === a && board[2][0] === a) return true;
 
   return false;
 };
 
-// checks whether a cell is empty and there is no winner before allowing the current player to make a move. 
-// If the move results in a win or a tie, the state is updated accordingly
+const undo = () => {
+  if (undoStack.length === 0) {
+    return;
+  }
+  const lastitem = undoStack.length - 1
+  const [row, col] = undoStack[lastitem]
+  board[row][col] = '';
+  undoStack.splice(lastitem, 1);
+}
+
 const play = (row: number, col: number) => {
   if (!board[row][col] && !winner.value) {
+    undoStack.push([row, col]);
     board[row][col] = currentPlayer.value;
     if (checkWin()) {
       winner.value = currentPlayer.value;
@@ -90,7 +96,11 @@ const reset = () => {
     <div class="control">
       <p v-if="winner" class="label">{{ winner }} wins!</p>
       <p v-else-if="isTie" class="label">It's a tie!</p>
-      <button @click="reset">Reset Game</button>
+      <div class="">
+        <button @click="undo">Undo</button>
+        <button @click="reset">Reset Game</button>
+      </div>
+
     </div>
   </div>
 </template>
