@@ -1,5 +1,4 @@
 
-
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 
@@ -8,7 +7,6 @@ const isTie = ref(false);
 const gameover = ref(false);
 const currentPlayer = ref('X');
 const undoStack = reactive<number[][]>([])
-const arr: number[][] = []
 
 let board = reactive([
   ['', '', ''],
@@ -48,6 +46,7 @@ const undo = () => {
   const lastitem = undoStack.length - 1
   const [row, col] = undoStack[lastitem]
   board[row][col] = '';
+  currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X';
   undoStack.splice(lastitem, 1);
 }
 
@@ -75,8 +74,6 @@ const reset = () => {
   gameover.value = false;
   winner.value = null;
 }
-
-
 </script>
 
 <template>
