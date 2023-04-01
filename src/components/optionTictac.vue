@@ -1,6 +1,6 @@
 <template>
   <div class="tic-tac-toe">
-    <h1>Options TicTac Game</h1>
+    <h1>TicTac Game</h1>
     <p class="label">Current Player {{ currentPlayer }} </p>
     <div class="board">
       <div class="row" v-for="(row, rowIndex) in board" :key="rowIndex">

@@ -6,6 +6,7 @@ const winner = ref<string | null>(null);
 const isTie = ref(false);
 const gameover = ref(false);
 const currentPlayer = ref('X');
+const player = ref<string | null>(null);
 const undoStack = reactive<number[][]>([])
 
 let board = reactive([
@@ -13,6 +14,11 @@ let board = reactive([
   ['', '', ''],
   ['', '', '']
 ]);
+
+const randomNumber = () => {
+  const random = Math.round(Math.random())
+  player.value = random === 0 ? 'computer' : "human";
+}
 
 const checkTie = () => {
   for (let i = 0; i < 3; i++) {
@@ -40,6 +46,9 @@ const checkWin = () => {
 };
 
 const undo = () => {
+  if (winner) {
+    return;
+  }
   if (undoStack.length === 0) {
     return;
   }
@@ -47,39 +56,51 @@ const undo = () => {
   const [row, col] = undoStack[lastitem]
   board[row][col] = '';
   currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X';
+  player.value = player.value === 'human' ? 'computer' : "human";
   undoStack.splice(lastitem, 1);
 }
 
 const play = (row: number, col: number) => {
+  if(!player.value) {
+    return;
+  }
+
   if (!board[row][col] && !winner.value) {
     undoStack.push([row, col]);
     board[row][col] = currentPlayer.value;
     if (checkWin()) {
-      winner.value = currentPlayer.value;
+      winner.value = `${currentPlayer.value} by ${player.value}`;
     } else if (checkTie()) {
       isTie.value = true;
     } else {
       currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X';
+      player.value = player.value === 'human' ? 'computer' : "human";
     }
   }
 }
 
 const reset = () => {
+  winner.value = null;
+  currentPlayer.value = 'X';
+  gameover.value = false;
+  player.value = null
   board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', '']
   ];
-  currentPlayer.value = 'X';
-  gameover.value = false;
-  winner.value = null;
 }
 </script>
 
 <template>
   <div>
-    <h1 class="">Composition TicTac Game</h1>
-    <p class="label"> Current Player: <span class=""> {{ currentPlayer }} </span> </p>
+    <h1 class="">TicTac Game</h1>
+    <div v-if="!player" class="">
+      <button  @click="randomNumber" class="">roll dice</button> to see who plays first
+    </div>
+
+    <p class="label"> Current Player: <span class="">{{ player }}</span> plays <span class=""> {{ currentPlayer }} </span>
+    </p>
     <div class="board">
       <div class="row" v-for="(row, rowIndex) of board" :key="rowIndex">
         <div class="cell" v-for="(cell, cellIndex) of row" :key="cellIndex"
